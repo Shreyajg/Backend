@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-const userSchema=new mongoose.Schema({
+const maidSchema=new mongoose.Schema({
     username:{
         type:String,
         unique:true,
@@ -23,7 +23,6 @@ const userSchema=new mongoose.Schema({
         trim:true,
         index:true
     },
-    
     coverImage:{
         type:String
     },
@@ -43,16 +42,16 @@ const userSchema=new mongoose.Schema({
 
 },{timestamps:true});
 
-userSchema.pre("save",async function (next) {
+maidSchema.pre("save",async function (next) {
     if(!this.isModified("password")) return next();
     this.password=await bcrypt.hash(this.password,10)
     next()
 })
-userSchema.methods.isPasswordCorrect=async function(password){
+maidSchema.methods.isPasswordCorrect=async function(password){
      return await bcrypt.compare(password,this.password)
 }
 
-userSchema.methods.generateAccessToken = function(){
+maidSchema.methods.generateAccessToken = function(){
     return jwt.sign(
         {
             _id: this._id,
@@ -66,7 +65,7 @@ userSchema.methods.generateAccessToken = function(){
         }
     )
 }
-userSchema.methods.generateRefreshToken = function(){
+maidSchema.methods.generateRefreshToken = function(){
     return jwt.sign(
         {
             _id: this._id,
@@ -78,4 +77,4 @@ userSchema.methods.generateRefreshToken = function(){
         }
     )
 }
-export const User=mongoose.model("User",userSchema);
+export const Maid = mongoose.models.Maid || mongoose.model("Maid", maidSchema);

@@ -1,14 +1,15 @@
+import { app } from "./app.js";
 import dotenv from "dotenv";
-import connectDB from "../DB/index.js"; // also make sure to add `.js` if you're using ES Modules
+import connectDB from "../DB/index.js"; // ✅ import the existing app, don't create a new one
 
-dotenv.config({ path: './.env' }); // ✅ make sure this matches your file name
+dotenv.config({ path: './.env' });
 
-connectDB();
-then(()=>{
-    app.listen(process.nextTick.PORT || 8000,()=>{
-            console.log(`server is running at ${process.env.PORT}`)
-    })
-})
-.catch((err)=>{
-    console.log("connection failed",err);
-})
+connectDB()
+  .then(() => {
+    app.listen(process.env.PORT || 8000, () => {
+      console.log(`🚀 Server is running at http://localhost:${process.env.PORT || 8000}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ Connection failed:", err);
+  });
